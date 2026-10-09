@@ -1,0 +1,22 @@
+@use 'sass:math';
+@use './variables' as *;
+
+// 引入公共样式
+@use './common' as *;
+
+// 移动端适配
+#app {
+  // 在大屏幕上模拟手机显示
+  @media screen and (min-width: 768px) {
+    // iPhone 6 的宽高比 375:667 ≈ 0.56221889
+    width: calc(100vh * 0.56221889);  // 根据视口高度和手机比例计算宽度
+    height: 100vh; // 高度撑满视口
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+    overflow-y: auto;
+    overflow-x: hidden;
+  }
+}
