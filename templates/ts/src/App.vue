@@ -12,7 +12,7 @@
 
 <script setup lang="ts">
 import { useRoute } from 'vue-router'
-import Tabbar from '@/components/TabBar.vue'
+import Tabbar from '@/components/Tabbar.vue'
 const route = useRoute()
 
 const showTabbar = computed(() => {
