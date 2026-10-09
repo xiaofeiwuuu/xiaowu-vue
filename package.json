@@ -13,7 +13,8 @@
   ],
   "scripts": {
     "test": "node --test test/*.test.js",
-    "smoke": "node scripts/smoke.mjs"
+    "smoke": "node scripts/smoke.mjs",
+    "prepublishOnly": "npm test"
   },
   "keywords": [
     "vue",
