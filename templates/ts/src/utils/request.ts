@@ -41,12 +41,12 @@ const ERROR_MESSAGES: Record<number, string> = {
 
 class Request {
   private instance: AxiosInstance
-  private retryQueue: Map<string, Promise<any>>
+  private retryQueue: Map<string, Promise<unknown>>
   private pendingRequests: Map<string, AbortController>
 
   constructor() {
     this.instance = axios.create({
-      baseURL: import.meta.env.VITE_API_BASE_URL || '/api',
+      baseURL: import.meta.env.VITE_API_URL || '/api',
       timeout: 10000,
       headers: {
         'Content-Type': 'application/json'
@@ -113,13 +113,16 @@ class Request {
 
     // 响应拦截器
     this.instance.interceptors.response.use(
-      (response: AxiosResponse<ApiResponse>): Promise<any> => {
+      (response: AxiosResponse<ApiResponse>): Promise<AxiosResponse> => {
         const config = response.config as RequestOptions
         this.removePendingRequest(config)
 
         if (config.returnRaw) {
           return Promise.resolve(response)
         }
+
+        // 拦截器直接返回业务数据（res.data）而不是 AxiosResponse，
+        // 调用方通过 request<T>() 的泛型拿到正确类型
 
         const res = response.data
         if (res.code !== 0) {
@@ -129,7 +132,7 @@ class Request {
           return Promise.reject(new Error(res.message))
         }
 
-        return Promise.resolve(res.data)
+        return Promise.resolve(res.data as unknown as AxiosResponse)
       },
       async (error: unknown) => {
         if (!axios.isAxiosError(error)) {
@@ -174,33 +177,30 @@ class Request {
     )
   }
 
-  // 通用请求方法
-  public async request<T = any>(config: RequestOptions): Promise<T> {
-    try {
-      const response = await this.instance.request(config)
-      return response.data
-    } catch (error) {
-      return Promise.reject(error)
-    }
+  // 通用请求方法：返回业务数据 T（响应拦截器已去掉 { code, data, message } 外壳）
+  public async request<T = unknown>(config: RequestOptions): Promise<T> {
+    // 响应拦截器已经把结果替换为业务数据，这里只需要收窄类型
+    const result: unknown = await this.instance.request(config)
+    return result as T
   }
 
   // GET 请求
-  public get<T = any>(url: string, config?: RequestOptions): Promise<T> {
+  public get<T = unknown>(url: string, config?: RequestOptions): Promise<T> {
     return this.request({ ...config, method: 'get', url })
   }
 
   // POST 请求
-  public post<T = any>(url: string, data?: any, config?: RequestOptions): Promise<T> {
+  public post<T = unknown>(url: string, data?: unknown, config?: RequestOptions): Promise<T> {
     return this.request({ ...config, method: 'post', url, data })
   }
 
   // PUT 请求
-  public put<T = any>(url: string, data?: any, config?: RequestOptions): Promise<T> {
+  public put<T = unknown>(url: string, data?: unknown, config?: RequestOptions): Promise<T> {
     return this.request({ ...config, method: 'put', url, data })
   }
 
   // DELETE 请求
-  public delete<T = any>(url: string, config?: RequestOptions): Promise<T> {
+  public delete<T = unknown>(url: string, config?: RequestOptions): Promise<T> {
     return this.request({ ...config, method: 'delete', url })
   }
 

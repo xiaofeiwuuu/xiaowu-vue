@@ -1,29 +1,33 @@
-import type { Fn } from '@/types/utils'
-
 // 防抖
-export function debounce<T extends Fn>(fn: T, delay: number): T {
+export function debounce<Args extends unknown[]>(
+  fn: (...args: Args) => void,
+  delay: number
+): (...args: Args) => void {
   let timer: ReturnType<typeof setTimeout> | null = null
-  
-  return function(this: any, ...args: any[]) {
+
+  return function (this: unknown, ...args: Args) {
     if (timer) clearTimeout(timer)
     timer = setTimeout(() => {
       fn.apply(this, args)
       timer = null
     }, delay)
-  } as T
+  }
 }
 
 // 节流
-export function throttle<T extends Fn>(fn: T, delay: number): T {
+export function throttle<Args extends unknown[]>(
+  fn: (...args: Args) => void,
+  delay: number
+): (...args: Args) => void {
   let last = 0
-  
-  return function(this: any, ...args: any[]) {
+
+  return function (this: unknown, ...args: Args) {
     const now = Date.now()
     if (now - last >= delay) {
       fn.apply(this, args)
       last = now
     }
-  } as T
+  }
 }
 
 // 深拷贝
@@ -33,23 +37,22 @@ export function deepClone<T>(obj: T): T {
   }
 
   if (obj instanceof Date) {
-    return new Date(obj.getTime()) as any
+    return new Date(obj.getTime()) as T
   }
 
   if (obj instanceof RegExp) {
-    return new RegExp(obj) as any
+    return new RegExp(obj) as T
   }
 
   if (Array.isArray(obj)) {
-    return obj.map(item => deepClone(item)) as any
+    return obj.map((item: unknown) => deepClone(item)) as T
   }
 
-  const cloned = {} as T
-  Object.keys(obj as object).forEach(key => {
-    cloned[key as keyof T] = deepClone((obj as any)[key])
-  })
-  
-  return cloned
+  const cloned: Record<string, unknown> = {}
+  for (const [key, value] of Object.entries(obj)) {
+    cloned[key] = deepClone(value)
+  }
+  return cloned as T
 }
 
 // 格式化文件大小

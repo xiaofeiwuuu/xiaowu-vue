@@ -1,6 +1,6 @@
 import type { StorageOptions } from '@/types/utils'
 
-interface StorageData<T = any> {
+interface StorageData<T = unknown> {
   value: T
   expire?: number
 }

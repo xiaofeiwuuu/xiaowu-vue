@@ -1,4 +1,4 @@
-import type { RouteRecordRaw } from 'vue-router'
+import type { RouteComponent, RouteLocationNormalized } from 'vue-router'
 
 export interface RouteMeta {
   title?: string
@@ -12,9 +12,9 @@ export interface RouteMeta {
 export type AppRouteRecordRaw = {
   path: string
   name?: string
-  component?: any
+  component?: RouteComponent | (() => Promise<RouteComponent>)
   children?: AppRouteRecordRaw[]
   redirect?: string | { name: string }
   meta?: RouteMeta
-  props?: boolean | Record<string, any> | ((to: any) => Record<string, any>)
+  props?: boolean | Record<string, unknown> | ((to: RouteLocationNormalized) => Record<string, unknown>)
 } 

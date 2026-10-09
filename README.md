@@ -245,6 +245,10 @@ npm run preview
 - CLI 迁移到 ESM（Node >= 18）
 - ESLint / Prettier / Vitest 选项真正生效，按选择生成配置与依赖
 - 目标目录已存在时中止，不再误改已有项目
+- TS 模板全面禁止 `any`（ESLint `no-explicit-any` 为 error），`request` 统一为直接返回业务数据
+- 修复 TS 登录流程：`request` 返回值契约前后矛盾，导致登录实际失败
+- `.env` 变量与类型声明对齐（`VITE_API_URL` / `VITE_TITLE` / `VITE_SALT`），JS 模板补上 `.env`
+- JS 模板补齐 `utils/common.js`、`date.js`、`validate.js`；生成项目自动带 `.gitignore`
 - 修复 TS 模板：`vue-tsc` 版本不兼容、编译产物写入 `src/`、缺少 `terser`、`api/user.ts` 类型错误
 
 ### v1.0.0

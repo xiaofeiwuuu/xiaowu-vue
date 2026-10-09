@@ -19,8 +19,7 @@ export const useUserStore = defineStore('user', {
   actions: {
     async login(loginForm: LoginParams): Promise<boolean> {
       try {
-        const { data } = await login(loginForm)
-        const { token, ...userInfo } = data
+        const { token, ...userInfo } = await login(loginForm)
         
         this.token = token
         this.userInfo = userInfo
@@ -37,7 +36,7 @@ export const useUserStore = defineStore('user', {
 
     async getUserInfo(): Promise<UserInfo | null> {
       try {
-        const { data } = await getUserInfo()
+        const data = await getUserInfo()
         this.userInfo = data
         return data
       } catch (error) {

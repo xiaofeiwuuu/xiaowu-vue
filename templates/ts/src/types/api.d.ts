@@ -21,7 +21,7 @@ export interface UserInfo {
 }
 
 // 响应数据结构
-export interface ApiResponse<T = any> {
+export interface ApiResponse<T = unknown> {
   code: number
   data: T
   message: string

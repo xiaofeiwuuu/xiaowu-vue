@@ -2,13 +2,13 @@
 export type Nullable<T> = T | null
 
 // 函数类型
-export type Fn<T = any, R = T> = (...args: T[]) => R
+export type Fn<Args extends unknown[] = never[], R = void> = (...args: Args) => R
 
 // 异步函数类型
-export type PromiseFn<T = any, R = T> = (...args: T[]) => Promise<R>
+export type PromiseFn<Args extends unknown[] = never[], R = void> = (...args: Args) => Promise<R>
 
 // 对象类型
-export type Recordable<T = any> = Record<string, T>
+export type Recordable<T = unknown> = Record<string, T>
 
 // 时间格式化选项
 export interface TimeFormatOptions {
