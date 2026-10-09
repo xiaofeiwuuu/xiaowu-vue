@@ -24,6 +24,9 @@ interface RequestOptions extends AxiosRequestConfig {
   returnRaw?: boolean
 }
 
+// 业务成功状态码
+const SUCCESS_CODE = 200
+
 // 错误消息映射
 const ERROR_MESSAGES: Record<number, string> = {
   400: '请求参数错误',
@@ -125,7 +128,7 @@ class Request {
         // 调用方通过 request<T>() 的泛型拿到正确类型
 
         const res = response.data
-        if (res.code !== 0) {
+        if (res.code !== SUCCESS_CODE) {
           if (!config.noToast) {
             showToast(res.message || '请求失败')
           }

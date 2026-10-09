@@ -9,6 +9,9 @@ const API_CONFIG = {
   timeout: 15000,
 };
 
+// 业务成功状态码
+const SUCCESS_CODE = 200;
+
 // 创建 axios 实例
 const request = axios.create(API_CONFIG);
 
@@ -56,7 +59,7 @@ request.interceptors.response.use(
     // 统一处理业务状态码
     const { code, message, data } = response.data;
 
-    if (code === 200) {
+    if (code === SUCCESS_CODE) {
       return data; // 返回实际数据
     } else {
       // 抛出错误，进入 catch 分支
