@@ -22,18 +22,18 @@
       <!-- 核心依赖 -->
       <van-cell-group inset class="feature-card">
         <van-cell title="核心依赖" />
-        <van-cell title="Vue 3.5.13" label="渐进式 JavaScript 框架，采用 Composition API" />
-        <van-cell title="Vite 4.3.0" label="下一代前端构建工具，提供极速开发体验" />
-        <van-cell title="Vant 4.0.0" label="轻量、可靠的移动端组件库" />
+        <van-cell title="Vue 3" label="渐进式 JavaScript 框架，采用 Composition API" />
+        <van-cell title="Vite 5" label="下一代前端构建工具，提供极速开发体验" />
+        <van-cell title="Vant 4" label="轻量、可靠的移动端组件库" />
       </van-cell-group>
 
       <!-- 项目依赖 -->
       <van-cell-group inset class="feature-card">
         <van-cell title="项目依赖" />
-        <van-cell title="Vue Router 4.2.0" label="Vue.js 的官方路由管理器" />
-        <van-cell title="Pinia 2.1.0" label="新一代状态管理工具，支持组合式 API" />
-        <van-cell title="Axios 1.4.0" label="基于 Promise 的 HTTP 客户端" />
-        <van-cell title="Sass 1.62.0" label="成熟、稳定、强大的 CSS 扩展语言" />
+        <van-cell title="Vue Router 4" label="Vue.js 的官方路由管理器" />
+        <van-cell title="Pinia 2" label="新一代状态管理工具，支持组合式 API" />
+        <van-cell title="Axios 1" label="基于 Promise 的 HTTP 客户端" />
+        <van-cell title="Sass 1" label="成熟、稳定、强大的 CSS 扩展语言" />
       </van-cell-group>
 
       <!-- 开发工具 -->
