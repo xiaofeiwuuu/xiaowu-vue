@@ -57,7 +57,6 @@
 import { ref, watch } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { showNotify } from 'vant'
-import { encryptWithSalt } from '@/utils/crypto'
 import { register } from '@/api/auth'
 import type { RegisterParams } from '@/types/api'
 
@@ -97,7 +96,6 @@ const onSubmit = async () => {
   try {
     loading.value = true
     const { confirmPassword, ...registerData } = formData.value
-    registerData.password = encryptWithSalt(registerData.password, import.meta.env.VITE_SALT)
     await register(registerData)
     showNotify({ type: 'success', message: '注册成功' })
     router.replace('/auth/login')

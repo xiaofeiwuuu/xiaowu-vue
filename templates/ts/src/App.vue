@@ -16,7 +16,6 @@ import Tabbar from '@/components/Tabbar.vue'
 const route = useRoute()
 
 const showTabbar = computed(() => {
-  console.log(route.meta);
   
   return !route.meta.hideTabbar
 })

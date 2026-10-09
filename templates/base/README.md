@@ -201,12 +201,17 @@ export const useUserStore = defineStore('user', {
 ## 发布部署
 
 ```bash
-# 构建生产版本
-npm run build
+# 构建生产版本（自动移除 console.log / warn / debug 与 debugger，保留 console.error）
+pnpm build
 
 # 预览构建结果
-npm run preview
+pnpm preview
+
+# 打包体积分析（生成 stats.html，不会自动打开浏览器）
+pnpm analyze
 ```
+
+构建完成后会自动把 `dist/` 打包为 `dist-zip/dist.zip`，可直接上传部署。
 
 ## 注意事项
 
@@ -219,8 +224,9 @@ npm run preview
    - 可通过元信息控制页面行为
 
 3. 安全性
-   - 密码传输使用 MD5 加密
-   - 敏感信息不要使用 Base64
+   - 登录/注册密码以明文经 HTTPS 提交，请由服务端使用 bcrypt / argon2 存储。
+     前端的 MD5 / Base64 只适合缓存混淆、签名等非安全场景：前端代码和 `.env` 变量对用户完全可见，加盐 MD5 并不能保护密码
+   - token 保存在 localStorage，页面一旦存在 XSS 就可能被读取；对安全要求高时请改用后端下发的 httpOnly Cookie
 
 ## 更新日志
 

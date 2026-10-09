@@ -28,7 +28,7 @@ export const useUserStore = defineStore('user', {
         showToast('登录成功')
         return true
       } catch (error) {
-        console.log(error);
+        console.error(error)
         
         return false
       }
@@ -40,7 +40,7 @@ export const useUserStore = defineStore('user', {
         this.userInfo = data
         return data
       } catch (error) {
-        console.log(error);
+        console.error(error)
         return null
       }
     },
@@ -51,7 +51,7 @@ export const useUserStore = defineStore('user', {
         this.resetUserInfo()
         showToast('已退出登录')
       } catch (error) {
-        console.log(error);
+        console.error(error)
       }
     },
 

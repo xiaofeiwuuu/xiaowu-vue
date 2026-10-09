@@ -6,14 +6,14 @@
     "xiaowu-vue": "bin/cli.js"
   },
   "files": [
+    "LICENSE",
     "bin",
     "lib",
     "templates"
   ],
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "dev:base": "cd templates/base && pnpm install && pnpm dev",
-    "dev:ts": "cd templates/ts && pnpm install && pnpm dev"
+    "test": "node --test test/*.test.js",
+    "smoke": "node scripts/smoke.mjs"
   },
   "keywords": [
     "vue",

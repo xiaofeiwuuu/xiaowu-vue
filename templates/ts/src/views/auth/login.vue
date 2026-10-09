@@ -39,7 +39,6 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
-import { encryptWithSalt } from '@/utils/crypto'
 import { useUserStore } from '@/store/modules/user'
 import type { LoginParams } from '@/types/api'
 const router = useRouter()
@@ -62,7 +61,7 @@ const onSubmit = async () => {
     loading.value = true
     const loginData = {
       username: formData.value.username,
-      password: encryptWithSalt(formData.value.password, import.meta.env.VITE_SALT)
+      password: formData.value.password
     }
     const success = await userStore.login(loginData)
     

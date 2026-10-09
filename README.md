@@ -20,7 +20,7 @@
   - 自定义配置：支持通过配置禁用错误提示。
 - 🔒 **安全性**：
   - 登录验证
-  - 多种加密
+  - 加密/编码工具（仅限非安全场景）
   - 路由守卫
   - Token 管理
 - 🛠️ **开发体验**：
@@ -39,6 +39,7 @@
 | JavaScript / TypeScript | TS 版含 `vue-tsc` 类型检查 |
 | ESLint | ESLint 9 flat config（`eslint.config.js`），`pnpm lint` |
 | Prettier | `.prettierrc`，`pnpm format`（需先选 ESLint，并自动接入 `eslint-config-prettier`） |
+| Git / 安装依赖 | 创建时可选择是否 `git init`、是否立即安装依赖（自动识别 pnpm / yarn / bun / npm） |
 | 多语言 | `vue-i18n` + 中英文语言包 + `LanguageSwitch` 组件 |
 | Vitest | `jsdom` 环境 + 示例测试，`pnpm test` / `pnpm coverage` |
 
@@ -218,12 +219,17 @@ export const useUserStore = defineStore('user', {
 ## 发布部署
 
 ```bash
-# 构建生产版本
-npm run build
+# 构建生产版本（自动移除 console.log / warn / debug 与 debugger，保留 console.error）
+pnpm build
 
 # 预览构建结果
-npm run preview
+pnpm preview
+
+# 打包体积分析（生成 stats.html，不会自动打开浏览器）
+pnpm analyze
 ```
+
+构建完成后会自动把 `dist/` 打包为 `dist-zip/dist.zip`，可直接上传部署。
 
 ## 注意事项
 
@@ -236,8 +242,9 @@ npm run preview
    - 可通过元信息控制页面行为
 
 3. 安全性
-   - 密码传输使用 MD5 加密
-   - 敏感信息不要使用 Base64
+   - 登录/注册密码以明文经 HTTPS 提交，请由服务端使用 bcrypt / argon2 存储。
+     前端的 MD5 / Base64 只适合缓存混淆、签名等非安全场景：前端代码和 `.env` 变量对用户完全可见，加盐 MD5 并不能保护密码
+   - token 保存在 localStorage，页面一旦存在 XSS 就可能被读取；对安全要求高时请改用后端下发的 httpOnly Cookie
 
 ## 更新日志
 
@@ -249,6 +256,11 @@ npm run preview
 - 修复 TS 登录流程：`request` 返回值契约前后矛盾，导致登录实际失败
 - `.env` 变量与类型声明对齐（`VITE_API_URL` / `VITE_TITLE` / `VITE_SALT`），JS 模板补上 `.env`
 - JS 模板补齐 `utils/common.js`、`date.js`、`validate.js`；生成项目自动带 `.gitignore`
+- 生产构建移除 `console.log` / `warn` / `debug`，并自动生成 `dist-zip/dist.zip`；`pnpm analyze` 才生成体积分析且不再自动打开浏览器
+- 登录/注册不再使用前端 MD5 加盐（盐值会暴露在 bundle 中，并无安全意义）
+- 校验项目名称，拒绝 `../x` 等路径；可选 `git init` 与自动安装依赖，自动识别包管理器
+- 新增 `LICENSE`、CLI 单元测试、端到端冒烟脚本（`pnpm smoke`）与 GitHub Actions
+- 升级 Vite 5，启用 Sass modern API，消除构建时的 DEPRECATION 警告
 - 修复 TS 模板：`vue-tsc` 版本不兼容、编译产物写入 `src/`、缺少 `terser`、`api/user.ts` 类型错误
 
 ### v1.0.0

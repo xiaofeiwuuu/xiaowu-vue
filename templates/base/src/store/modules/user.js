@@ -41,7 +41,7 @@ export const useUserStore = defineStore('user', {
         
         return true
       } catch (error) {
-        console.log('登录失败',error)
+        console.error('登录失败',error)
         throw error
       }
     },
@@ -57,7 +57,7 @@ export const useUserStore = defineStore('user', {
         
         return data
       } catch (error) {
-        console.log('获取用户信息失败',error)
+        console.error('获取用户信息失败',error)
         throw error
       }
     },
@@ -71,7 +71,7 @@ export const useUserStore = defineStore('user', {
         clearAuth()
         showToast('退出登录成功')
       } catch (error) {
-        console.log('退出登录失败',error)
+        console.error('退出登录失败',error)
         throw error
       }
     }

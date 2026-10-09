@@ -4,10 +4,12 @@ import AutoImport from 'unplugin-auto-import/vite';
 import Components from 'unplugin-vue-components/vite';
 import { VantResolver } from 'unplugin-vue-components/resolvers';
 import { visualizer } from 'rollup-plugin-visualizer';
+import zipPack from 'vite-plugin-zip-pack';
 import postcsspxtorem from 'postcss-pxtorem';
 import path from 'path';
 
-export default defineConfig({
+// 打包体积分析：pnpm analyze（生成 stats.html，不自动打开浏览器）
+export default defineConfig(({ mode, command }) => ({
   root: process.cwd(),
   plugins: [
     vue(),
@@ -31,11 +33,17 @@ export default defineConfig({
       resolvers: [VantResolver()],
       dts: 'src/components.d.ts',
     }),
-    visualizer(),
+    mode === 'analyze' && visualizer({ gzipSize: true, brotliSize: true }),
+    // 构建完成后把 dist 打包为 dist-zip/dist.zip，方便上传部署
+    { ...zipPack({ inDir: 'dist', outDir: 'dist-zip', outFileName: 'dist.zip' }), apply: 'build' },
   ],
+
+  // 仅生产构建：移除 console.log / console.warn / console.debug（保留 console.error）和 debugger
+  esbuild: command === 'build' ? { pure: ['console.log', 'console.warn', 'console.debug'], drop: ['debugger'] } : {},
   css: {
     preprocessorOptions: {
       scss: {
+        api: 'modern-compiler',
         additionalData: `@use "@/assets/styles/variables" as *;`,
       },
     },
@@ -64,12 +72,10 @@ export default defineConfig({
     }
   },
   build: {
-    brotliSize: false,
     chunkSizeWarningLimit: 2000,
-    sourcemap: false,
-    cache: true
+    sourcemap: false
   },
   optimizeDeps: {
     include: ['vue', 'vue-router', 'pinia', 'axios', 'vant']
   }
-}); 
+}));

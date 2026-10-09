@@ -6,7 +6,7 @@ import type { AppRouteRecordRaw } from './types'
 import type { RouteRecordRaw } from 'vue-router'
 // 生成路由配置
 const routes: AppRouteRecordRaw[] = generateRoutes()
-console.log(routes);
+;
 
 // 添加根路由重定向
 routes.unshift({

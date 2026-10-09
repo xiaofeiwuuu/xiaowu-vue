@@ -66,7 +66,6 @@
 <script setup>
 import { useRouter, useRoute } from 'vue-router'
 import { showToast, showDialog } from 'vant'
-import { encryptWithSalt } from '@/utils/crypto'
 import { useUserStore } from '@/store/modules/user'
 
 const router = useRouter()
@@ -127,7 +126,7 @@ const handleLogin = async () => {
     // 准备登录数据（密码加密）
     const loginData = {
       username: loginForm.username,
-      password: encryptWithSalt(loginForm.password,import.meta.env.VITE_SALT)
+      password: loginForm.password
     }
     
     // 调用 store 的登录方法
@@ -139,7 +138,7 @@ const handleLogin = async () => {
     const redirect = route.query.redirect || '/home'
     router.replace(redirect)
   } catch (error) {
-    console.log('登录失败',error)
+    console.error('登录失败',error)
   } finally {
     loading.value = false
   }

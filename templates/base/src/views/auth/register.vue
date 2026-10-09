@@ -124,7 +124,6 @@
 
 <script setup>
 import { useRouter, useRoute } from 'vue-router'
-import { encryptWithSalt } from '@/utils/crypto'
 import { register, sendVerifyCode } from '@/api/auth'
 
 const router = useRouter()
@@ -199,7 +198,7 @@ const handleSendCode = async () => {
     }, 1000)
   } catch (error) {
     isCountingDown.value = false
-    console.log('发送验证码失败',error)
+    console.error('发送验证码失败',error)
   }
 }
 
@@ -213,7 +212,7 @@ const handleRegister = async () => {
       username: formData.username,
       phone: formData.phone,
       code: formData.code,
-      password: encryptWithSalt(formData.password,import.meta.env.VITE_SALT),
+      password: formData.password,
       inviteCode: formData.inviteCode
     })
 
@@ -222,7 +221,7 @@ const handleRegister = async () => {
     // 注册成功后跳转到登录页
     router.push('/auth/login')
   } catch (error) {
-    console.log('注册失败',error)
+    console.error('注册失败',error)
   } finally {
     loading.value = false
   }
