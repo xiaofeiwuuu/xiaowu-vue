@@ -1,4 +1,4 @@
-import { DEFAULT_META, getMetaConfig } from './metaConfig';
+import { getMetaConfig } from './metaConfig';
 import type { AppRouteRecordRaw } from './types';
 
 // 自动导入 views 目录下的所有 .vue 文件

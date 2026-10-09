@@ -66,10 +66,7 @@
   
   <script setup lang="ts">
   // TypeScript 版本 - 首页
-  import { ref } from 'vue'
   import NavBar from '@/components/NavBar.vue'
-  // 如果需要使用响应式数据
-  const version = ref<string>('1.0.0')
   </script>
   
   <style lang="scss" scoped>

@@ -32,7 +32,7 @@ import { useRouter } from 'vue-router'
 
 const router = useRouter()
 
-const props = defineProps({
+defineProps({
   // 标题
   title: {
     type: String,

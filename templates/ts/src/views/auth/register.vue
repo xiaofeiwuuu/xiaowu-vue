@@ -99,7 +99,7 @@ const onSubmit = async () => {
     await register(registerData)
     showNotify({ type: 'success', message: '注册成功' })
     router.replace('/auth/login')
-  } catch (error) {
+  } catch {
     // 错误已在请求拦截器中处理
   } finally {
     loading.value = false

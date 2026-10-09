@@ -1,4 +1,4 @@
-import { DEFAULT_META, getMetaConfig } from './metaConfig';
+import { getMetaConfig } from './metaConfig';
 
 // 自动导入 views 目录下的所有 .vue 文件
 const modules = import.meta.glob('../views/**/*.vue');

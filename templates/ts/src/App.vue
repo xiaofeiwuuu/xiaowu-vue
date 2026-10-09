@@ -9,7 +9,7 @@
         <component :is="Component" v-if="!route.meta.keepAlive" :key="route.path" />
       </router-view>
     </div>
-    <Tabbar v-model="showTabbar" />
+    <Tabbar :model-value="showTabbar" />
   </div>
 </template>
 

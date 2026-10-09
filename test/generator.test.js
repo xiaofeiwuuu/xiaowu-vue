@@ -71,6 +71,7 @@ test('TS 全选：配置、依赖、脚本齐全', async () => {
     assert.ok(pkg.devDependencies[dep], dep);
   }
   assert.match(await read('ts-all', 'eslint.config.js'), /no-explicit-any': 'error'/);
+  assert.match(await read('ts-all', 'eslint.config.js'), /no-unused-vars': \['error', \{ ignoreRestSiblings: true \}\]/);
   assert.match(await read('ts-all', 'src/main.ts'), /import i18n from '\.\/i18n'/);
   assert.match(await read('ts-all', 'src/main.ts'), /app\.use\(i18n\)/);
 });
