@@ -11,7 +11,6 @@ import 'vant/es/dialog/style'
 import 'vant/es/notify/style'
 import './assets/styles/index.scss'
 import './assets/styles/vant.scss'
-import './utils/rem'
 
 const app = createApp(App)
 const pinia = createPinia()

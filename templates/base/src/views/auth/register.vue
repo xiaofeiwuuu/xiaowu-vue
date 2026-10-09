@@ -246,7 +246,7 @@ const handleRegister = async () => {
     }
 
     p {
-      color: #999;
+      color: #666;
       font-size: 14px;
     }
   }
@@ -263,7 +263,7 @@ const handleRegister = async () => {
 
       a {
         color: var(--van-primary-color);
-        text-decoration: none;
+        text-decoration: underline;
       }
     }
   }

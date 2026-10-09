@@ -165,7 +165,7 @@ const passwordFormatter = (value) => value.replace(/[^a-zA-Z0-9]/g, '')
     }
 
     p {
-      color: #999;
+      color: #666;
       font-size: 14px;
     }
   }
@@ -203,7 +203,7 @@ const passwordFormatter = (value) => value.replace(/[^a-zA-Z0-9]/g, '')
 
       a {
         color: var(--van-primary-color);
-        text-decoration: none;
+        text-decoration: underline;
       }
     }
   }

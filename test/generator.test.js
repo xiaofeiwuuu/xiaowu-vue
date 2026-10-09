@@ -50,6 +50,11 @@ test('JS 全不选：不产生任何可选功能', async () => {
   assert.match(await read('js-none', 'src/main.js'), /vant\/es\/toast\/style/);
   assert.ok(await fs.pathExists(path.join(cwd, 'js-none/public/favicon.svg')));
   assert.match(await read('js-none', 'index.html'), /lang="zh-CN"/);
+  // rem 适配内联在 index.html 中同步执行，不再作为模块加载
+  assert.match(await read('js-none', 'index.html'), /function setRem/);
+  assert.match(await read('js-none', 'index.html'), /app-loading/);
+  assert.equal(await fs.pathExists(path.join(cwd, 'js-none/src/utils/rem.js')), false);
+  assert.doesNotMatch(await read('js-none', 'src/main.js'), /utils\/rem/);
   assert.match(await read('js-none', '.gitignore'), /node_modules/);
   assert.doesNotMatch(await read('js-none', 'src/main.js'), /@i18n/);
 });

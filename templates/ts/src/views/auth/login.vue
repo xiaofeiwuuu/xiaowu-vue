@@ -94,6 +94,7 @@ const onSubmit = async () => {
       .register-link {
         color: var(--van-primary-color);
         font-size: 14px;
+        text-decoration: underline;
       }
     }
   }

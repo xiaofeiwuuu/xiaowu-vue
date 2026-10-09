@@ -5,7 +5,7 @@
 ## 特性
 
 - 📦 **技术栈**：Vue3 + Vite + Pinia + Vant4
-- 📱 **移动端适配**：rem 方案 (web 也是保持的 iPhone6 样式)
+- 📱 **移动端适配**：rem 方案（根字号由 index.html 内联脚本同步设置） (web 也是保持的 iPhone6 样式)
 - 🚀 **自动化**：
   - 自动路由生成
   - VUE 组件自动导入
@@ -274,6 +274,7 @@ pnpm analyze
 - 性能：去掉整包 Vant 样式（CSS 约 201 KB → 83 KB）、拆分 vendor、`keep-alive` 限制 10 个页面、去掉与自研 rem 冲突的 `amfe-flexible`
 - 请求：去重 key 带上参数，修复参数不同的并发请求被误取消、被取消的请求仍被重试；重试仅默认作用于幂等请求，TS 版补齐真正的重试
 - 补充 `favicon.svg`，`lang` 改为 `zh-CN`；新增 `request` 行为测试
+- 性能与体验：`rem` 适配改为 `index.html` 内联脚本（消除强制回流），新增首屏加载占位，补 `robots.txt` 与 meta description，登录/注册页修复对比度与链接可辨识性问题
 - 修复 TS 模板：`vue-tsc` 版本不兼容、编译产物写入 `src/`、缺少 `terser`、`api/user.ts` 类型错误
 
 ### v1.0.0

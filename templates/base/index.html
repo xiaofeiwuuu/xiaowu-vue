@@ -3,11 +3,59 @@
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-    <title>xiaofeiwuuu</title>
+    <!-- 保留 maximum-scale：iOS Safari 聚焦 <16px 的输入框时会自动放大页面 -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+    <meta name="description" content="%VITE_TITLE%" />
+    <title>%VITE_TITLE%</title>
+    <!-- rem 等比适配：放在样式和应用脚本之前同步执行，首屏就使用正确的根字号，避免布局跳变和强制回流 -->
+    <script>
+      (function () {
+        var BASE_SIZE = 37.5 // 基准字号：375px 设计稿下 1rem = 37.5px
+        var RATIO = 0.56221889 // iPhone 6 宽高比 375:667，桌面大屏时按手机比例居中显示
+        var raf
+        function setRem() {
+          var clientWidth = document.documentElement.clientWidth
+          var width = clientWidth >= 768 ? window.innerHeight * RATIO : clientWidth
+          document.documentElement.style.fontSize = (BASE_SIZE * width) / 375 + 'px'
+        }
+        setRem()
+        window.addEventListener('resize', function () {
+          cancelAnimationFrame(raf)
+          raf = requestAnimationFrame(setRem)
+        })
+        window.addEventListener('orientationchange', setRem)
+      })()
+    </script>
+    <!-- 首屏占位：应用挂载前显示，避免 JS 加载期间的白屏 -->
+    <style>
+      html,
+      body {
+        margin: 0;
+        background: #f7f8fa;
+      }
+      .app-loading {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 100vh;
+      }
+      .app-loading i {
+        width: 28px;
+        height: 28px;
+        border: 3px solid #dcdee0;
+        border-top-color: #1989fa;
+        border-radius: 50%;
+        animation: app-spin 0.8s linear infinite;
+      }
+      @keyframes app-spin {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+    </style>
   </head>
   <body>
-    <div id="app"></div>
+    <div id="app"><div class="app-loading"><i></i></div></div>
     <script type="module" src="/src/main.js"></script>
   </body>
-</html> 
+</html>
