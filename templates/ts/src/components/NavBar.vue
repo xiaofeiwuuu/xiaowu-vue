@@ -8,7 +8,7 @@
     :safe-area-inset-top="safeAreaInsetTop"
     :border="border"
     :z-index="zIndex"
-    style="{ backgroundColor }"
+    :style="{ backgroundColor }"
     @click-left="onClickLeft"
     @click-right="onClickRight"
   >
@@ -50,7 +50,7 @@ const props = withDefaults(defineProps<Props>(), {
   safeAreaInsetTop: true,
   border: true,
   zIndex: 100,
-  backgroundColor: '#ffffff'
+  backgroundColor: 'var(--van-background-2)'
 })
 
 const emit = defineEmits<{

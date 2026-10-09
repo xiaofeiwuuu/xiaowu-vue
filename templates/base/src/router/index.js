@@ -18,16 +18,13 @@ const router = createRouter({
   routes
 })
 
-// 白名单路由（无需登录即可访问）
-const whiteList = ['/home', '/auth/login', '/auth/register']
-
 // 路由守卫
 router.beforeEach(async (to, from, next) => {
   // 设置页面标题
   document.title = to.meta.title || import.meta.env.VITE_TITLE || 'xiaofeiwuuu'
   
-  // 在白名单中的路由直接放行
-  if (whiteList.includes(to.path)) {
+  // 无需登录的页面直接放行（在 router/metaConfig 中通过 requiresAuth 声明）
+  if (!to.meta.requiresAuth) {
     next()
     return
   }

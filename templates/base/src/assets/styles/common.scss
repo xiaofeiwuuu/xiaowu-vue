@@ -1,3 +1,14 @@
+/* 应用级语义色：亮色值与历史写死值一致，暗色模式（.van-theme-dark）下切换为适合深色背景的值 */
+:root {
+  --app-text-secondary: #666;
+  --app-text-tertiary: #999;
+}
+
+.van-theme-dark {
+  --app-text-secondary: #a8a8a8;
+  --app-text-tertiary: #8e8e93;
+}
+
 /* 移动端适配 */
 html,
 body {
@@ -9,10 +20,10 @@ body {
     Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  color: #333;
+  color: var(--van-text-color);
   font-size: 14px;
   line-height: 1.5;
-  background: #f5f5f5;
+  background: var(--van-background);
 }
 
 /* 去除默认的触摸高亮效果 */

@@ -61,7 +61,7 @@ defineProps({
   // 背景颜色
   backgroundColor: {
     type: String,
-    default: '#ffffff'
+    default: 'var(--van-background-2)'
   }
 })
 

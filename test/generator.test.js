@@ -16,8 +16,8 @@ after(async () => {
   await fs.remove(cwd);
 });
 
-const none = { lint: false, prettier: false, i18n: false, vitest: false };
-const all = { lint: true, prettier: true, i18n: true, vitest: true };
+const none = { lint: false, prettier: false, i18n: false, theme: false, vitest: false };
+const all = { lint: true, prettier: true, i18n: true, theme: true, vitest: true };
 
 async function walk(dir) {
   const out = [];
@@ -100,4 +100,59 @@ test('目录已存在时抛错，且不修改其中的文件', async () => {
   await assert.rejects(() => generator('exists', { language: 'JavaScript', ...all, cwd }), /已存在/);
   assert.equal(await fs.readFile(path.join(dir, 'package.json'), 'utf8'), '{"keep":true}');
   assert.deepEqual(await fs.readdir(dir), ['package.json']);
+});
+
+test('权限：路由守卫由 meta.requiresAuth 驱动，不再有写死的白名单', async () => {
+  for (const [name, file, meta] of [
+    ['js-none', 'src/router/index.js', 'src/router/metaConfig.js'],
+    ['ts-all', 'src/router/index.ts', 'src/router/metaConfig.ts']
+  ]) {
+    const guard = await read(name, file);
+    assert.match(guard, /!to\.meta\.requiresAuth/);
+    assert.doesNotMatch(guard, /whiteList/);
+    const metaConfig = await read(name, meta);
+    assert.match(metaConfig, /requiresAuth: true/);
+    assert.match(metaConfig, /PUBLIC_ROUTES/);
+  }
+});
+
+test('多环境：.env / .env.development / .env.production，代理地址不带 VITE_ 前缀', async () => {
+  for (const name of ['js-none', 'ts-all']) {
+    for (const f of ['.env', '.env.development', '.env.production']) {
+      assert.ok(await fs.pathExists(path.join(cwd, name, f)), `${name}/${f}`);
+    }
+    const dev = await read(name, '.env.development');
+    assert.match(dev, /^PROXY_TARGET=/m);
+    assert.doesNotMatch(dev, /VITE_PROXY/);
+    assert.doesNotMatch(await read(name, '.env.production'), /PROXY_TARGET=/);
+  }
+});
+
+test('主题：启用时生成 composable、开关组件并接入入口；未启用时不留任何痕迹', async () => {
+  // 启用（ts-all / js-all 都选了 theme）
+  for (const [name, ext] of [['ts-all', 'ts'], ['js-all', 'js']]) {
+    assert.ok(await fs.pathExists(path.join(cwd, name, `src/composables/useTheme.${ext}`)));
+    assert.ok(await fs.pathExists(path.join(cwd, name, 'src/components/ThemeSwitch.vue')));
+    assert.ok(await fs.pathExists(path.join(cwd, name, 'test/theme.test.ts')));
+    assert.match(await read(name, `src/main.${ext}`), /initTheme\(\)/);
+    assert.match(await read(name, 'src/views/mine/index.vue'), /<theme-switch \/>/);
+    const html = await read(name, 'index.html');
+    assert.match(html, /van-theme-dark/);
+    assert.doesNotMatch(html, /@theme:/);
+  }
+  // 未启用
+  for (const name of ['js-none']) {
+    assert.equal(await fs.pathExists(path.join(cwd, name, 'src/composables')), false);
+    assert.doesNotMatch(await read(name, 'src/main.js'), /theme|Theme/);
+    assert.doesNotMatch(await read(name, 'src/views/mine/index.vue'), /theme/i);
+    const html = await read(name, 'index.html');
+    assert.doesNotMatch(html, /van-theme-dark|@theme/);
+    assert.match(html, /function setRem/); // 其他内联脚本不受影响
+  }
+});
+
+test('主题：只选主题、不选 Vitest 时，不复制主题测试', async () => {
+  await generator('js-theme-only', { language: 'JavaScript', ...none, theme: true, cwd });
+  assert.equal(await fs.pathExists(path.join(cwd, 'js-theme-only/test')), false);
+  assert.ok(await fs.pathExists(path.join(cwd, 'js-theme-only/src/composables/useTheme.js')));
 });

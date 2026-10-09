@@ -71,7 +71,7 @@
 <style lang="scss" scoped>
 .home-container {
   min-height: 100vh;
-  background-color: #f7f8fa;
+  background-color: var(--van-background);
 
   :deep(.van-nav-bar) {
     .van-nav-bar__title {
@@ -88,7 +88,7 @@
 
     .intro-text {
       font-size: 14px;
-      color: #666;
+      color: var(--app-text-secondary);
       line-height: 1.6;
       padding: 8px 0;
     }
@@ -102,7 +102,7 @@
     }
 
     :deep(.van-cell__label) {
-      color: #666;
+      color: var(--app-text-secondary);
       line-height: 1.4;
     }
   }
@@ -110,7 +110,7 @@
   .project-info {
     text-align: center;
     padding: 24px 0;
-    color: #999;
+    color: var(--app-text-tertiary);
     font-size: 12px;
 
     p {

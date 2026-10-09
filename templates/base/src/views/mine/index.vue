@@ -1,6 +1,7 @@
 <template>
     <div class="user">
       <h1>用户中心</h1>
+      <!-- @theme-switch -->
   
       <van-button type="primary" @click="handleLogout">退出登录</van-button>
     </div>

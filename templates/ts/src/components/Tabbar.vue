@@ -44,8 +44,8 @@
   .tabbar {
     height: 50px;
     display: flex;
-    background: #fff;
-    border-top: 1px solid #eee;
+    background: var(--van-background-2);
+    border-top: 1px solid var(--van-border-color);
   
     .tabbar-item {
       flex: 1;
@@ -53,11 +53,11 @@
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      color: #666;
+      color: var(--app-text-secondary);
       font-size: 12px;
   
       &.active {
-        color: #1989fa;
+        color: var(--van-primary-color);
       }
   
     }

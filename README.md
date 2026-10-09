@@ -40,6 +40,7 @@
 | ESLint | ESLint 9 flat config（`eslint.config.js`），`pnpm lint` |
 | Prettier | `.prettierrc`，`pnpm format`（需先选 ESLint，并自动接入 `eslint-config-prettier`） |
 | Git / 安装依赖 | 创建时可选择是否 `git init`、是否立即安装依赖（自动识别 pnpm / yarn / bun / npm） |
+| 主题 / 暗黑模式 | 跟随系统或手动切换，选择保存在本地；页面颜色全部使用主题变量，首屏不闪白 |
 | 多语言 | `vue-i18n` + 中英文语言包 + `LanguageSwitch` 组件 |
 | Vitest | `jsdom` 环境 + 示例测试，`pnpm test` / `pnpm coverage` |
 
@@ -87,6 +88,17 @@ views/
 ```
 
 #### 路由元信息
+
+| 字段 | 默认值 | 说明 |
+| --- | --- | --- |
+| `title` | `VITE_TITLE` | 页面标题 |
+| `keepAlive` | `true` | 是否缓存页面（最多缓存 10 个，需要每次进入刷新的页面在 `onActivated` 里处理） |
+| `hideTabbar` | `false` | 是否隐藏底部导航栏 |
+| `requiresAuth` | `true` | 是否需要登录，未登录会弹出登录提示；**新增页面默认受保护** |
+
+默认值和按目录的特例都在 `router/metaConfig` 中配置；无需登录的公开页面在 `PUBLIC_ROUTES` 里声明（默认只有 `home`，`auth/` 目录下的登录、注册页自动公开）。
+前端的路由守卫只负责体验（跳转与提示），**不是安全边界**，真正的权限校验必须由后端完成。
+
 ```javascript
 {
   hideTabbar: false,  // 是否隐藏底部导航栏
@@ -170,6 +182,19 @@ const decoded = base64Decode(encoded)
   </van-tabbar>
 </template>
 ```
+
+## 环境变量
+
+| 文件 | 何时加载 | 用途 |
+| --- | --- | --- |
+| `.env` | 所有环境 | 共用变量（如 `VITE_TITLE`） |
+| `.env.development` | `pnpm dev` | 开发环境：接口走 vite 代理，`PROXY_TARGET` 指向本地后端 |
+| `.env.production` | `pnpm build` | 生产环境：按实际情况修改 `VITE_API_URL` |
+| `.env.local` | 所有环境 | 本机私有覆盖，已被 `.gitignore` 忽略 |
+
+- 只有以 `VITE_` 开头的变量会暴露到前端代码；`PROXY_TARGET` 只在 vite 配置中读取，不会打进产物。
+- 开发时浏览器请求 `/api/xxx`，由 vite 转发到 `PROXY_TARGET` 并**去掉 `/api` 前缀**，因此没有跨域问题；生产环境请让 Nginx / 网关做同样的转发，或把 `VITE_API_URL` 改成完整地址（需后端配置 CORS）。
+- 需要测试环境时，新增 `.env.staging`，并用 `vite build --mode staging` 构建。
 
 ## 项目结构
 
@@ -259,6 +284,9 @@ pnpm analyze
 ## 更新日志
 
 ### v1.4.0
+- 路由权限由 `meta.requiresAuth` 驱动，取代写死的白名单（新增页面默认受保护）
+- 多环境配置：`.env` / `.env.development` / `.env.production`，开发代理读取 `PROXY_TARGET`
+- 新增可选的主题 / 暗黑模式；页面颜色改用主题变量；修复 TS 版 `NavBar` 的 `style` 未绑定导致首页标题不可见的问题
 - CLI 迁移到 ESM（Node >= 18）
 - ESLint / Prettier / Vitest 选项真正生效，按选择生成配置与依赖
 - 目标目录已存在时中止，不再误改已有项目

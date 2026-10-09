@@ -1,4 +1,4 @@
-import { defineConfig } from 'vite';
+import { defineConfig, loadEnv } from 'vite';
 import vue from '@vitejs/plugin-vue';
 import { resolve } from 'path';
 import AutoImport from 'unplugin-auto-import/vite';
@@ -6,6 +6,18 @@ import Components from 'unplugin-vue-components/vite';
 import { visualizer } from 'rollup-plugin-visualizer';
 import zipPack from 'vite-plugin-zip-pack';
 import { VantResolver } from 'unplugin-vue-components/resolvers';
+
+// 开发环境代理：仅当配置了 PROXY_TARGET 时启用（见 .env.development）
+function createProxy(env: Record<string, string>) {
+  if (!env.PROXY_TARGET) return undefined;
+  return {
+    '/api': {
+      target: env.PROXY_TARGET,
+      changeOrigin: true,
+      rewrite: (path: string) => path.replace(/^\/api/, ''),
+    },
+  };
+}
 
 // 打包体积分析：pnpm analyze（生成 stats.html，不自动打开浏览器）
 export default defineConfig(({ mode, command }) => ({
@@ -42,13 +54,7 @@ export default defineConfig(({ mode, command }) => ({
   server: {
     host: true,
     cors: true,
-    proxy: {
-      '/api': {
-        target: 'http://localhost:3000',
-        changeOrigin: true,
-        rewrite: (path) => path.replace(/^\/api/, ''),
-      },
-    },
+    proxy: createProxy(loadEnv(mode, process.cwd(), 'PROXY_')),
   },
   build: {
     chunkSizeWarningLimit: 2000,

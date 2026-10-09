@@ -241,12 +241,12 @@ const handleRegister = async () => {
 
     h2 {
       font-size: 24px;
-      color: #333;
+      color: var(--van-text-color);
       margin-bottom: 10px;
     }
 
     p {
-      color: #666;
+      color: var(--app-text-secondary);
       font-size: 14px;
     }
   }
@@ -259,7 +259,7 @@ const handleRegister = async () => {
     .login-link {
       text-align: center;
       font-size: 14px;
-      color: #666;
+      color: var(--app-text-secondary);
 
       a {
         color: var(--van-primary-color);

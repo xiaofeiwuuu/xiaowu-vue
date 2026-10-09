@@ -8,9 +8,9 @@ import generator from '../lib/generator.js';
 
 const [language = 'TypeScript', preset = 'all'] = process.argv.slice(2);
 const presets = {
-  none: { lint: false, prettier: false, i18n: false, vitest: false },
-  lint: { lint: true, prettier: false, i18n: false, vitest: false },
-  all: { lint: true, prettier: true, i18n: true, vitest: true }
+  none: { lint: false, prettier: false, i18n: false, theme: false, vitest: false },
+  lint: { lint: true, prettier: false, i18n: false, theme: false, vitest: false },
+  all: { lint: true, prettier: true, i18n: true, theme: true, vitest: true }
 };
 if (!['JavaScript', 'TypeScript'].includes(language) || !presets[preset]) {
   console.error('用法：node scripts/smoke.mjs <JavaScript|TypeScript> <none|lint|all>');
