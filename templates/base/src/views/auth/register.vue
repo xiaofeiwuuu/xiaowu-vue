@@ -1,5 +1,5 @@
 <template>
-  <div class="register-container">
+  <div class="register-container safe-top">
     <div class="register-content">
       <div class="register-header">
         <h2>欢迎注册</h2>

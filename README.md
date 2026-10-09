@@ -263,6 +263,11 @@ pnpm analyze
 
 ## 注意事项
 
+0. 安全区（刘海屏 / Home 横条）
+   - `index.html` 设置了 `viewport-fit=cover`，页面会延伸到安全区内。`common.scss` 提供 `--safe-top/right/bottom/left` 四个变量（来自 `env(safe-area-inset-*)`，不支持时为 0）
+   - 底部 `Tabbar` 已自动避让；`NavBar` 由 Vant 自行处理顶部；**没有导航栏的页面**请在根节点加上 `safe-top` 类（登录、注册、我的已加）
+   - 自己写的固定定位元素（如悬浮按钮、底部操作栏）请使用 `var(--safe-bottom)` 避让
+
 0. Vant 样式
    - `<van-xxx>` 组件的样式由 `VantResolver` 自动按需引入，无需全量引入 `vant/lib/index.css`
    - `showToast` / `showDialog` / `showNotify` 等函数式组件的样式已在 `main` 中引入；用到 `showImagePreview` 等其他函数式组件时，请补充对应的 `vant/es/xxx/style`
@@ -303,6 +308,9 @@ pnpm analyze
 - 请求：去重 key 带上参数，修复参数不同的并发请求被误取消、被取消的请求仍被重试；重试仅默认作用于幂等请求，TS 版补齐真正的重试
 - 补充 `favicon.svg`，`lang` 改为 `zh-CN`；新增 `request` 行为测试
 - 性能与体验：`rem` 适配改为 `index.html` 内联脚本（消除强制回流），新增首屏加载占位，补 `robots.txt` 与 meta description，登录/注册页修复对比度与链接可辨识性问题
+- 安全区：Tabbar 底部、无导航栏页面顶部、横屏左右均已避让；`100vh` 改为 `100dvh`
+- 暗色主题改为柔和深灰（`#121212` / `#1e1e1e`），并提亮暗色下的输入框占位文字
+- 重排「我的」页，修复取消退出时的未处理 Promise 拒绝
 - 修复 TS 模板：`vue-tsc` 版本不兼容、编译产物写入 `src/`、缺少 `terser`、`api/user.ts` 类型错误
 
 ### v1.0.0

@@ -42,7 +42,8 @@ const handleTabClick = (item) => {
 
 <style lang="scss" scoped>
 .tabbar {
-  height: 50px;
+  height: calc(50px + var(--safe-bottom));
+  padding-bottom: var(--safe-bottom);
   display: flex;
   background: var(--van-background-2);
   border-top: 1px solid var(--van-border-color);

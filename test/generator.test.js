@@ -139,6 +139,8 @@ test('主题：启用时生成 composable、开关组件并接入入口；未启
     const html = await read(name, 'index.html');
     assert.match(html, /van-theme-dark/);
     assert.doesNotMatch(html, /@theme:/);
+    assert.match(html, /background: #121212/); // 首屏背景与暗色主题背景一致
+    assert.match(await read(name, 'src/assets/styles/common.scss'), /html\.van-theme-dark \{[^}]*--van-background: #121212/);
   }
   // 未启用
   for (const name of ['js-none']) {
@@ -155,4 +157,26 @@ test('主题：只选主题、不选 Vitest 时，不复制主题测试', async 
   await generator('js-theme-only', { language: 'JavaScript', ...none, theme: true, cwd });
   assert.equal(await fs.pathExists(path.join(cwd, 'js-theme-only/test')), false);
   assert.ok(await fs.pathExists(path.join(cwd, 'js-theme-only/src/composables/useTheme.js')));
+});
+
+test('安全区：Tabbar 底部避让、无导航栏页面顶部避让、App 使用 dvh', async () => {
+  for (const [name, ext] of [['js-none', 'js'], ['ts-all', 'ts']]) {
+    const styles = await read(name, 'src/assets/styles/common.scss');
+    for (const v of ['--safe-top', '--safe-bottom', '--safe-left', '--safe-right']) {
+      assert.match(styles, new RegExp(`${v}: env\\(safe-area-inset-`), v);
+    }
+    assert.match(styles, /\.safe-top::before/);
+
+    const tabbar = await read(name, 'src/components/Tabbar.vue');
+    assert.match(tabbar, /height: calc\(50px \+ var\(--safe-bottom\)\)/);
+    assert.match(tabbar, /padding-bottom: var\(--safe-bottom\)/);
+
+    const app = await read(name, 'src/App.vue');
+    assert.match(app, /height: 100dvh/);
+    assert.match(app, /padding-left: var\(--safe-left\)/);
+
+    for (const page of ['src/views/auth/login.vue', 'src/views/auth/register.vue', 'src/views/mine/index.vue']) {
+      assert.match(await read(name, page), /class="[a-z-]+ safe-top"/, page);
+    }
+  }
 });

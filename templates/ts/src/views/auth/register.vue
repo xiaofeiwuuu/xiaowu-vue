@@ -1,5 +1,5 @@
 <template>
-  <div class="register-container">
+  <div class="register-container safe-top">
     <nav-bar title="注册" :show-back="false"/>
     
     <van-form @submit="onSubmit" class="register-form">

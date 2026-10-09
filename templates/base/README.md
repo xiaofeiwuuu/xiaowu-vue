@@ -220,6 +220,11 @@ pnpm analyze
 
 ## 注意事项
 
+0. 安全区（刘海屏 / Home 横条）
+   - `index.html` 设置了 `viewport-fit=cover`，页面会延伸到安全区内。`common.scss` 提供 `--safe-top/right/bottom/left` 四个变量（来自 `env(safe-area-inset-*)`，不支持时为 0）
+   - 底部 `Tabbar` 已自动避让；`NavBar` 由 Vant 自行处理顶部；**没有导航栏的页面**请在根节点加上 `safe-top` 类（登录、注册、我的已加）
+   - 自己写的固定定位元素（如悬浮按钮、底部操作栏）请使用 `var(--safe-bottom)` 避让
+
 0. Vant 样式
    - `<van-xxx>` 组件的样式由 `VantResolver` 自动按需引入，无需全量引入 `vant/lib/index.css`
    - `showToast` / `showDialog` / `showNotify` 等函数式组件的样式已在 `main` 中引入；用到 `showImagePreview` 等其他函数式组件时，请补充对应的 `vant/es/xxx/style`

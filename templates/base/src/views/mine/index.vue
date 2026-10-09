@@ -1,5 +1,5 @@
 <template>
-  <div class="mine">
+  <div class="mine safe-top">
     <h1 class="title">用户中心</h1>
     <!-- @theme-switch -->
 

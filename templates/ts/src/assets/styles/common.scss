@@ -1,10 +1,33 @@
+/* 安全区（刘海屏 / 底部 Home 横条）
+   index.html 设置了 viewport-fit=cover，页面会延伸到安全区内，需要自行避让。
+   不支持 env() 的环境下取 0，不影响布局 */
+:root {
+  --safe-top: env(safe-area-inset-top, 0px);
+  --safe-right: env(safe-area-inset-right, 0px);
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+  --safe-left: env(safe-area-inset-left, 0px);
+}
+
+/* 没有导航栏的页面（登录、注册等）在根节点加上它，避开顶部刘海 / 状态栏。
+   用伪元素占位而不是 padding，避免和页面自己的 padding 样式互相覆盖 */
+.safe-top::before {
+  content: '';
+  display: block;
+  height: var(--safe-top);
+}
+
 /* 应用级语义色：亮色值与历史写死值一致，暗色模式（.van-theme-dark）下切换为适合深色背景的值 */
 :root {
   --app-text-secondary: #666;
   --app-text-tertiary: #999;
 }
 
-.van-theme-dark {
+/* 暗色模式：用柔和的深灰替代 Vant 默认的纯黑背景。
+   使用 html.van-theme-dark 提高选择器权重，避免被按需加载的 Vant 组件样式里的同名变量覆盖 */
+html.van-theme-dark {
+  --van-background: #121212;
+  --van-background-2: #1e1e1e;
+  --van-text-color-3: #6e6e73;
   --app-text-secondary: #a8a8a8;
   --app-text-tertiary: #8e8e93;
 }

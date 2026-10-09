@@ -27,6 +27,9 @@ const showTabbar = computed(() => {
   display: flex;
   flex-direction: column;
   height: 100vh;
+  height: 100dvh; // iOS Safari 地址栏会遮住 100vh 的底部，dvh 为实际可视高度；不支持的浏览器回退到上一行
+  padding-left: var(--safe-left);
+  padding-right: var(--safe-right);
   
   .page-content {
     flex: 1;

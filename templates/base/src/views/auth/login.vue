@@ -1,5 +1,5 @@
 <template>
-  <div class="login-container">
+  <div class="login-container safe-top">
 
     <div class="login-content">
       <div class="login-header">

@@ -1,5 +1,5 @@
 <template>
-  <div class="login-container">
+  <div class="login-container safe-top">
     <nav-bar title="登录" :show-back="false"></nav-bar>
 
     <van-form @submit="onSubmit" class="login-form">
