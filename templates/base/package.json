@@ -6,9 +6,7 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "preview": "vite preview",
-    "lint": "eslint src --ext .js,.vue --fix",
-    "format": "prettier --write \"src/**/*.{js,vue,scss,less}\""
+    "preview": "vite preview"
   },
   "dependencies": {
     "vue": "^3.5.13",
@@ -27,18 +25,5 @@
     "unplugin-auto-import": "^0.15.0",
     "unplugin-vue-components": "^0.24.0",
     "rollup-plugin-visualizer": "^5.9.0"
-  },
-  "optionalDependencies": {
-    "eslint": "^8.0.0",
-    "eslint-config-prettier": "^8.8.0",
-    "eslint-plugin-vue": "^9.0.0",
-    "prettier": "^2.8.0",
-    "@vue/eslint-config-prettier": "^7.1.0",
-    "vue-i18n": "^9.2.0",
-    "vitest": "^1.2.1",
-    "@vitest/coverage-v8": "^1.2.1",
-    "@vue/test-utils": "^2.4.3",
-    "jsdom": "^24.0.0",
-    "happy-dom": "^13.3.1"
   }
 }

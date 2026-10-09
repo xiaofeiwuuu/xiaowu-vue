@@ -30,7 +30,19 @@
   - NavBar 导航栏
   - Tabbar 标签栏
 
-## 可选择 js,ts,i18n,eslint,prettier,vitest等(目前模板有登录注册退出登录等功能,还在进一步完善中)
+## 可选功能
+
+创建项目时可按需选择，未选中的功能不会产生任何文件和依赖：
+
+| 选项 | 内容 |
+| --- | --- |
+| JavaScript / TypeScript | TS 版含 `vue-tsc` 类型检查 |
+| ESLint | ESLint 9 flat config（`eslint.config.js`），`pnpm lint` |
+| Prettier | `.prettierrc`，`pnpm format`（需先选 ESLint，并自动接入 `eslint-config-prettier`） |
+| 多语言 | `vue-i18n` + 中英文语言包 + `LanguageSwitch` 组件 |
+| Vitest | `jsdom` 环境 + 示例测试，`pnpm test` / `pnpm coverage` |
+
+> 要求 Node.js >= 18。CLI 与生成的项目均使用 ESM。
 
 ## 快速开始
 
@@ -228,6 +240,12 @@ npm run preview
    - 敏感信息不要使用 Base64
 
 ## 更新日志
+
+### v1.4.0
+- CLI 迁移到 ESM（Node >= 18）
+- ESLint / Prettier / Vitest 选项真正生效，按选择生成配置与依赖
+- 目标目录已存在时中止，不再误改已有项目
+- 修复 TS 模板：`vue-tsc` 版本不兼容、编译产物写入 `src/`、缺少 `terser`、`api/user.ts` 类型错误
 
 ### v1.0.0
 - 初始版本发布

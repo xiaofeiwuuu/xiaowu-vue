@@ -14,5 +14,6 @@ const app = createApp(App)
 
 app.use(createPinia())
 app.use(router)
+// @i18n-use
 
 app.mount('#app')

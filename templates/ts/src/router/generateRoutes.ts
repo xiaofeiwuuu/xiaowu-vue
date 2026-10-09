@@ -43,7 +43,7 @@ export default function generateRoutes(): AppRouteRecordRaw[] {
     }
 
     // 格式化路由路径
-    let routePath = formatRoutePath(componentPath);
+    const routePath = formatRoutePath(componentPath);
 
     // 开发环境下打印路由信息
     if (import.meta.env.DEV) {

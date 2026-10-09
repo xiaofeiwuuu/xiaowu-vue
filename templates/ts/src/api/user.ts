@@ -14,11 +14,7 @@ export interface UpdateUserParams {
 }
 
 export function login(data: LoginData) {
-  return request<UserInfo>({
-    url: '/user/login',
-    method: 'post',
-    data
-  })
+  return request.post<ApiResponse<UserInfo>>('/user/login', data)
 }
 
 export const getUserInfo = () => {
