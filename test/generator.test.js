@@ -44,6 +44,12 @@ test('JS 全不选：不产生任何可选功能', async () => {
   assert.equal(await fs.pathExists(path.join(cwd, 'js-none/tsconfig.json')), false);
   assert.equal(await fs.pathExists(path.join(cwd, 'js-none/eslint.config.js')), false);
   assert.equal(await fs.pathExists(path.join(cwd, 'js-none/pnpm-lock.yaml')), false);
+  // 不再整包引入 Vant 样式，也不再同时使用两套 rem 适配
+  assert.equal(pkg.devDependencies['amfe-flexible'], undefined);
+  assert.doesNotMatch(await read('js-none', 'src/main.js'), /vant\/lib\/index\.css|amfe-flexible/);
+  assert.match(await read('js-none', 'src/main.js'), /vant\/es\/toast\/style/);
+  assert.ok(await fs.pathExists(path.join(cwd, 'js-none/public/favicon.svg')));
+  assert.match(await read('js-none', 'index.html'), /lang="zh-CN"/);
   assert.match(await read('js-none', '.gitignore'), /node_modules/);
   assert.doesNotMatch(await read('js-none', 'src/main.js'), /@i18n/);
 });

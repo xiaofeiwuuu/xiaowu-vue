@@ -1,7 +1,8 @@
 <template>
   <div class="app-container">
     <div class="page-content">
-      <keep-alive>
+      <!-- max 限制缓存页面数量，避免访问过的页面一直占用内存 -->
+      <keep-alive :max="10">
         <router-view v-if="$route.meta.keepAlive"></router-view>
       </keep-alive>
       <router-view v-if="!$route.meta.keepAlive"></router-view>

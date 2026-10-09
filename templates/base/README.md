@@ -102,6 +102,9 @@ request.post('/api/login', data, {
 })
 ```
 
+> 失败重试：仅对网络错误和 5xx 生效。未设置 `retry` 时，GET / HEAD / OPTIONS 默认重试 3 次，POST 等非幂等请求默认不重试，避免重复提交；可按请求覆盖。
+> 去重取消：同一接口且参数（`params` / `data`）完全相同的未完成请求会被取消，参数不同的并发请求互不影响。被取消的请求不会重试。
+
 ### 3. 加密工具
 
 #### MD5 加密
@@ -213,13 +216,20 @@ pnpm analyze
 
 构建完成后会自动把 `dist/` 打包为 `dist-zip/dist.zip`，可直接上传部署。
 
+构建时 `vue` / `vant` / `axios` 会拆分为独立的 vendor 文件，业务代码更新后用户仍可命中第三方依赖的缓存。
+
 ## 注意事项
+
+0. Vant 样式
+   - `<van-xxx>` 组件的样式由 `VantResolver` 自动按需引入，无需全量引入 `vant/lib/index.css`
+   - `showToast` / `showDialog` / `showNotify` 等函数式组件的样式已在 `main` 中引入；用到 `showImagePreview` 等其他函数式组件时，请补充对应的 `vant/es/xxx/style`
 
 1. 移动端适配
    - 设计稿基准宽度：375px
    - 开发时使用 px，自动转换为 rem
 
 2. 路由配置
+   - 默认开启页面缓存（`keep-alive`，最多缓存 10 个页面），需要每次进入都刷新数据的页面请在 `onActivated` 里处理
    - 自动生成的路由支持嵌套
    - 可通过元信息控制页面行为
 

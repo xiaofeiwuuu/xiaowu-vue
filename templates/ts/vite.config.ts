@@ -54,5 +54,16 @@ export default defineConfig(({ mode, command }) => ({
     chunkSizeWarningLimit: 2000,
     cssCodeSplit: true,
     sourcemap: false,
+    rollupOptions: {
+      output: {
+        // 拆分第三方依赖：业务代码更新后，用户浏览器仍可命中 vendor 缓存
+        manualChunks(id) {
+          if (!id.includes('node_modules')) return
+          if (/node_modules\/(vue|@vue|vue-router|pinia)\//.test(id)) return 'vue'
+          if (/node_modules\/(vant|@vant)\//.test(id)) return 'vant'
+          if (/node_modules\/axios\//.test(id)) return 'axios'
+        }
+      }
+    },
   },
 }));

@@ -8,16 +8,21 @@ import axios, {
 import { showToast } from 'vant'
 import { useUserStore } from '@/store/modules/user'
 import router from '@/router'
+import { sleep } from '@/utils/common'
 import type { ApiResponse } from '@/types/api'
 
 // 扩展 AxiosRequestConfig 类型
 interface RequestOptions extends AxiosRequestConfig {
   // 是否显示错误提示
   noToast?: boolean
-  // 重试次数
+  // 失败重试次数（仅网络错误和 5xx）。未设置时：GET / HEAD / OPTIONS 重试 3 次，其他方法不重试，避免重复提交
   retry?: number
-  // 重试延迟
+  // 重试间隔（毫秒），默认 1000
   retryDelay?: number
+  // 内部使用：已重试次数
+  __retryCount?: number
+  // 内部使用：请求唯一标识，请求阶段生成，避免响应阶段 data 已被序列化导致 key 不一致
+  __requestKey?: string
   // 是否需要 token
   requiresAuth?: boolean
   // 是否返回原始响应
@@ -26,6 +31,11 @@ interface RequestOptions extends AxiosRequestConfig {
 
 // 业务成功状态码
 const SUCCESS_CODE = 200
+
+// 重试默认值
+const DEFAULT_RETRY = 3
+const DEFAULT_RETRY_DELAY = 1000
+const IDEMPOTENT_METHODS = ['get', 'head', 'options']
 
 // 错误消息映射
 const ERROR_MESSAGES: Record<number, string> = {
@@ -44,7 +54,6 @@ const ERROR_MESSAGES: Record<number, string> = {
 
 class Request {
   private instance: AxiosInstance
-  private retryQueue: Map<string, Promise<unknown>>
   private pendingRequests: Map<string, AbortController>
 
   constructor() {
@@ -55,7 +64,6 @@ class Request {
         'Content-Type': 'application/json'
       }
     })
-    this.retryQueue = new Map()
     this.pendingRequests = new Map()
     this.setupInterceptors()
   }
@@ -69,6 +77,7 @@ class Request {
   // 添加请求到队列
   private addPendingRequest(config: RequestOptions): void {
     const key = this.getRequestKey(config)
+    config.__requestKey = key
     const controller = new AbortController()
     config.signal = controller.signal
     this.pendingRequests.set(key, controller)
@@ -76,8 +85,9 @@ class Request {
 
   // 从队列中移除请求
   private removePendingRequest(config: RequestOptions): void {
-    const key = this.getRequestKey(config)
-    this.pendingRequests.delete(key)
+    if (config?.__requestKey) {
+      this.pendingRequests.delete(config.__requestKey)
+    }
   }
 
   // 取消重复的请求
@@ -151,6 +161,20 @@ class Request {
         }
 
         const errorResponse = axiosError.response
+
+        // 请求重试：仅网络错误或 5xx
+        if (config && (!errorResponse || errorResponse.status >= 500)) {
+          const idempotent = IDEMPOTENT_METHODS.includes((config.method || 'get').toLowerCase())
+          const maxRetry = config.retry ?? (idempotent ? DEFAULT_RETRY : 0)
+          const count = config.__retryCount ?? 0
+
+          if (count < maxRetry) {
+            config.__retryCount = count + 1
+            await sleep(config.retryDelay ?? DEFAULT_RETRY_DELAY)
+            return this.instance.request(config)
+          }
+        }
+
         const errorData = errorResponse?.data
         const errorMessage = errorData?.message || axiosError.message || '请求失败'
 
